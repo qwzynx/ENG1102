@@ -34,7 +34,10 @@ public class App {
     };
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        String myUSBPort = "COM3";
+        // Replace the hardcoded "COM3" with this to work on both:
+        String myUSBPort = System.getProperty("os.name").toLowerCase().contains("win")
+                ? "COM3"
+                : "/dev/ttyUSB0";
         var device = new FirmataDevice(myUSBPort);
         device.start();
         device.ensureInitializationIsDone();
