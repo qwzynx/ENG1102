@@ -187,7 +187,7 @@ class StudyTimer extends TimerTask {
                     }
                 } else {
                     noMotionSeconds++;
-                    if (noMotionSeconds >= 60 && currentState != State.AWAY) {
+                    if (noMotionSeconds >= 30 && currentState != State.AWAY) {
                         previousState = currentState;
                         currentState = State.AWAY;
                     }
