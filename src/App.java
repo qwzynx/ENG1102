@@ -209,7 +209,7 @@ class StudyTimer extends TimerTask {
 
                     display.getCanvas().drawString(0, 0, "Study Time: " + initialTime / 60 + "min");
                     display.getCanvas().drawString(0, 40, "Press button to begin");
-                    display.getCanvas().fillRect(4, 20, rectWidth, 10, MonochromeCanvas.Color.BRIGHT);
+                    display.getCanvas().fillRect(0, 20, rectWidth, 10);
                     break;
 
                 case WAITING_PHONE:
@@ -286,9 +286,9 @@ class StudyTimer extends TimerTask {
                     display.getCanvas().drawString(0, 15, "Timer paused.");
                     ledPin.setValue(ledPin.getValue() == 0 ? 1 : 0);
                     break;
+
                 case SHUTOFF:
-                    display.getCanvas().drawString(70, 30, "Restart");
-                    display.getCanvas().drawString(10, 30, "Shutoff");
+                    drawChoice("Restart", "Shutoff");
             }
             display.display();
         } catch (Exception e) {
@@ -298,14 +298,16 @@ class StudyTimer extends TimerTask {
 
     private void drawChoice(String yesLabel, String noLabel) {
         int yesX = 65;
+        int yesLength = yesLabel.length();
         display.getCanvas().drawString(yesX, 40, yesLabel);
         int noX = 10;
+        int noLength = noLabel.length();
         display.getCanvas().drawString(noX, 40, noLabel);
 
         if (potPin.getValue() < 1024 / 2) {
-            display.getCanvas().drawHorizontalLine(yesX, 50, 48, MonochromeCanvas.Color.BRIGHT);
+            display.getCanvas().drawHorizontalLine(yesX-2, 50, yesLength*6+2, MonochromeCanvas.Color.BRIGHT);
         } else {
-            display.getCanvas().drawHorizontalLine(noX, 50, 42, MonochromeCanvas.Color.BRIGHT);
+            display.getCanvas().drawHorizontalLine(noX-2, 50, noLength*6+2, MonochromeCanvas.Color.BRIGHT);
         }
     }
 }
