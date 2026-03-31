@@ -32,7 +32,12 @@ public class App {
             "Organize your digital desktop folders",
             "Change into fresh, comfortable clothes",
             "Listen to one upbeat song",
-            "Wash your face with cold water"
+            "Wash your face with cold water",
+            "Do a small exercise routine",
+            "Stretch your body",
+            "Fix your posture and sit upright",
+            "Take a short 10–15 minute nap",
+            "Talk to a family member or friend"
     };
 
     public static void main(String[] args) throws IOException, InterruptedException {
