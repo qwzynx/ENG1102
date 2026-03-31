@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Random;
-
+//Line 245 to re-enable buzzer
 public class App {
     static final int A0 = 14;
     static final int A2 = 16; // Standard analog pin 6 on Uno/Nano
@@ -175,7 +175,6 @@ class StudyTimer extends TimerTask {
         try {
             display.getCanvas().clear();
             long lightLevel = lightPin.getValue();
-            System.out.println(lightLevel);
 
             // Handle PIR sensor globally (unless in setup, reward, or alarm)
             if (currentState == State.STUDYING || currentState == State.AWAY) {
@@ -186,6 +185,7 @@ class StudyTimer extends TimerTask {
                         ledPin.setValue(0);
                     }
                 } else {
+                    System.out.println(noMotionSeconds);
                     noMotionSeconds++;
                     if (noMotionSeconds >= 30 && currentState != State.AWAY) {
                         previousState = currentState;
@@ -238,6 +238,8 @@ class StudyTimer extends TimerTask {
 
                 case ALARM:
                     display.getCanvas().drawString(0, 20, "! PUT PHONE BACK !");
+                    display.getCanvas().drawString(0, 30, "Each Second is 5 Seconds Extra");
+                    time = time+5;
 
                     // Flash LED and Buzzer
                     long toggle = ledPin.getValue() == 0 ? 1 : 0;
