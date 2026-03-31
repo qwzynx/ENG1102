@@ -84,8 +84,8 @@ class StudyTimer extends TimerTask {
     private final Timer timer;
 
     // State Machine to handle complex transitions cleanly
-    enum State { SETUP, WAITING_PHONE, STUDYING, ALARM, TASK_PROPOSED, REWARD_ASK, REWARD_TIME, AWAY }
-    private State currentState = State.SETUP;
+    enum State { SETUP, WAITING_PHONE, STUDYING, ALARM, TASK_PROPOSED, REWARD_ASK, REWARD_TIME, AWAY, SHUTOFF }
+    static State currentState = State.SETUP;
     private State previousState = State.SETUP; // To return from AWAY
 
     private String productiveText = "";
@@ -108,30 +108,6 @@ class StudyTimer extends TimerTask {
         this.ledPin = ledPin;
         this.buzzerPin = buzzerPin;
         this.timer = timer;
-    }
-
-    public void shutdown() {
-        try {
-            // 1. Turn off all outputs so nothing gets stuck on
-            ledPin.setValue(0);
-            buzzerPin.setValue(0);
-
-            // 2. Say goodbye and clear the screen completely
-            display.getCanvas().clear();
-            display.getCanvas().drawString(40, 30, "Goodbye!");
-            display.display();
-
-            Thread.sleep(1000); // Show the message for 1 second
-
-            display.getCanvas().clear();
-            display.display(); // Push the blank canvas to the OLED
-
-            // 3. Stop the timer and kill the Java program
-            timer.cancel();
-            System.exit(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void buttonPressed() {
@@ -166,6 +142,35 @@ class StudyTimer extends TimerTask {
                 // End break early, reset reward time, and force putting the phone back
                 rewardTime = 0;
                 currentState = State.WAITING_PHONE;
+                break;
+            case SHUTOFF:
+                if (potPin.getValue() < 1024 / 2) {
+                    time = 0;
+                    initialTime = 0; // 5 minutes
+                    currentState = State.SETUP;
+                } else {
+                    try {
+                        // 1. Turn off all outputs so nothing gets stuck on
+                        ledPin.setValue(0);
+                        buzzerPin.setValue(0);
+
+                        // 2. Say goodbye and clear the screen completely
+                        display.getCanvas().clear();
+                        display.getCanvas().drawString(40, 30, "Goodbye!");
+                        display.display();
+
+                        Thread.sleep(1000); // Show the message for 1 second
+
+                        display.getCanvas().clear();
+                        display.display(); // Push the blank canvas to the OLED
+
+                        // 3. Stop the timer and kill the Java program
+                        timer.cancel();
+                        System.exit(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
         }
     }
@@ -281,6 +286,9 @@ class StudyTimer extends TimerTask {
                     display.getCanvas().drawString(0, 15, "Timer paused.");
                     ledPin.setValue(ledPin.getValue() == 0 ? 1 : 0);
                     break;
+                case SHUTOFF:
+                    display.getCanvas().drawString(70, 30, "Restart");
+                    display.getCanvas().drawString(10, 30, "Shutoff");
             }
             display.display();
         } catch (Exception e) {
@@ -325,7 +333,7 @@ class ButtonPresser extends TimerTask {
                     // The button is being held down. Check how long it's been held.
                     if (System.currentTimeMillis() - pressStartTime > 2000) {
                         // 2000 milliseconds = 2 seconds long press detected
-                        task.shutdown();
+                        StudyTimer.currentState = StudyTimer.State.SHUTOFF;
                     }
                 }
             } else if (buttonPin.getValue() == 0 && isPressed) {
