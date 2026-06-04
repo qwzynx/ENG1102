@@ -3,7 +3,7 @@
 ## Project Overview
 This project was developed for **ENG1102**, focusing on creating a physical solution to help students manage their study time and reduce phone distractions. The **FocusBox** is an interactive study timer that ensures your phone stays put while you work, rewarding you with breaks and suggesting productive tasks when you need them.
 
-![Final Product Placeholder](path/to/your/image.jpg)
+![Final Product](.image04.jpg)
 
 ## The Design Process
 Our team followed a rigorous engineering design process to bring the FocusBox to life.
